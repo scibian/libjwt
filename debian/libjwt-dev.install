@@ -1,0 +1,4 @@
+#! /usr/bin/dh-exec
+debian/build-openssl/libjwt/.libs/libjwt*.so usr/lib/${DEB_HOST_MULTIARCH}/
+debian/build-openssl/include/jwt.h usr/include
+debian/build-openssl/libjwt/libjwt.pc usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig

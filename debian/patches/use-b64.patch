@@ -1,0 +1,133 @@
+Description: use the packaged libb64 in order to avoid license problems
+             with the base64.* files from Apple
+Author: Thorsten Alteholz <debian@alteholz.de>
+Index: libjwt-1.10.1/libjwt/Makefile.am
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/Makefile.am	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/libjwt/Makefile.am	2019-01-14 15:14:54.250669892 +0100
+@@ -1,6 +1,6 @@
+ lib_LTLIBRARIES = libjwt.la
+ 
+-libjwt_la_SOURCES = jwt.c base64.c
++libjwt_la_SOURCES = jwt.c
+ 
+ if HAVE_OPENSSL
+ libjwt_la_SOURCES += jwt-openssl.c
+@@ -11,8 +11,8 @@
+ # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+ libjwt_la_LDFLAGS = -version-info 5:1:5 $(OPENSSL_LDFLAGS) $(GNUTLS_LDFLAGS) $(JANSSON_LDFLAGS)
+ libjwt_la_CPPFLAGS = -I$(top_srcdir)/include $(OPENSSL_INCLUDES) $(GNUTLS_INCLUDES) $(CODE_COVERAGE_CPPFLAGS) -Wall
+-libjwt_la_CFLAGS = $(JANSSON_CFLAGS) $(OPENSSL_CFLAGS) $(GNUTLS_CFLAGS) $(CODE_COVERAGE_CFLAGS)
+-libjwt_la_LIBADD = $(JANSSON_LIBS) $(OPENSSL_LIBS) $(GNUTLS_LIBS) $(CODE_COVERAGE_LDFLAGS)
++libjwt_la_CFLAGS = $(B64_CFLAGS) $(JANSSON_CFLAGS) $(OPENSSL_CFLAGS) $(GNUTLS_CFLAGS) $(CODE_COVERAGE_CFLAGS)
++libjwt_la_LIBADD = $(B64_LIBS) $(JANSSON_LIBS) $(OPENSSL_LIBS) $(GNUTLS_LIBS) $(CODE_COVERAGE_LDFLAGS)
+ 
+ pkgconfiglibdir = $(libdir)/pkgconfig
+ pkgconfiglib_DATA = libjwt.pc
+Index: libjwt-1.10.1/libjwt/jwt-gnutls.c
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/jwt-gnutls.c	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/libjwt/jwt-gnutls.c	2019-01-14 15:14:54.250669892 +0100
+@@ -17,7 +17,8 @@
+ #include <jwt.h>
+ 
+ #include "jwt-private.h"
+-#include "base64.h"
++#include <b64/cencode.h>
++#include <b64/cdecode.h>
+ #include "config.h"
+ 
+ /* Workaround to use GnuTLS 3.5 EC signature encode/decode functions that
+Index: libjwt-1.10.1/libjwt/jwt.c
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/jwt.c	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/libjwt/jwt.c	2019-01-14 15:14:54.250669892 +0100
+@@ -11,10 +11,47 @@
+ 
+ #include <jwt.h>
+ 
++#include <b64/cencode.h>
++#include <b64/cdecode.h>
+ #include "jwt-private.h"
+-#include "base64.h"
+ #include "config.h"
+ 
++int jwt_Base64encode(char *coded_dst, const char *plain_src, int len_plain_src)
++{
++  base64_encodestate _state;
++  int _count, _i, _len;
++  char *_rp = coded_dst, *_wp = coded_dst;
++
++  base64_init_encodestate(&_state);
++  _count = base64_encode_block(plain_src, len_plain_src, coded_dst, &_state);
++  _count += base64_encode_blockend(coded_dst + _count, &_state);
++
++  /*
++   * the b64 library might insert \n after some chars,
++   * these must be removed again
++   * (at least in order to pass the tests)
++   */
++  _len=_count;
++  for (_i=0; _i<_len; _i++ ) {
++    if (*_rp != '\n') *_wp++=*_rp;
++    else _count--;
++    _rp++;
++  }
++  coded_dst[_count] = 0;
++
++  return _count;
++}
++
++int jwt_Base64decode(char *plain_dst, const char *coded_src)
++{
++ base64_decodestate _state;
++ int _count = 0;
++
++ base64_init_decodestate(&_state);
++ _count = base64_decode_block(coded_src, strlen(coded_src), plain_dst, &_state);
++
++ return _count;
++}
+ 
+ const char *jwt_alg_str(jwt_alg_t alg)
+ {
+Index: libjwt-1.10.1/libjwt/jwt-private.h
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/jwt-private.h	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/libjwt/jwt-private.h	2019-01-14 15:14:54.250669892 +0100
+@@ -19,6 +19,9 @@
+ };
+ 
+ /* Helper routines. */
++int jwt_Base64encode(char *coded_dst, const char *plain_src, int len_plain_src);
++int jwt_Base64decode(char *plain_dst, const char *coded_src);
++
+ void jwt_base64uri_encode(char *str);
+ void *jwt_b64_decode(const char *src, int *ret_len);
+ 
+Index: libjwt-1.10.1/configure.ac
+===================================================================
+--- libjwt-1.10.1.orig/configure.ac	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/configure.ac	2019-01-14 15:14:54.250669892 +0100
+@@ -23,6 +23,11 @@
+ PKG_CHECK_MODULES([JANSSON], [jansson >= 2.0])
+ PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [true], [true])
+ 
++AC_SUBST([B64_CFLAGS], [])
++AC_SUBST([B64_LIBS], [-lb64])
++# does not work
++#PKG_CHECK_MODULES([B64], [b64 >= 0.0])
++
+ AX_VALGRIND_CHECK
+ 
+ AX_CODE_COVERAGE
+Index: libjwt-1.10.1/libjwt/libjwt.pc.in
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/libjwt.pc.in	2019-01-14 15:14:54.286669891 +0100
++++ libjwt-1.10.1/libjwt/libjwt.pc.in	2019-01-14 15:14:54.250669892 +0100
+@@ -9,4 +9,4 @@
+ 
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -ljwt
+-Libs.private: @JANSSON_LIBS@ @OPENSSL_LIBS@
++Libs.private: @JANSSON_LIBS@ @OPENSSL_LIBS@ @B64_LIBS@

@@ -1,0 +1,45 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+%:
+	dh $@ --with autoreconf
+
+override_dh_auto_configure:
+	# create build directory for both flavours (openssl and gnutls)
+	mkdir -p debian/build-openssl debian/build-gnutls
+	# undo last patch, which is the gnutls patch
+	quilt pop
+	tar -cf - --exclude=debian/build* --exclude=.pc . \
+	    | tar -xf - -C debian/build-openssl
+	# reapply last patch, which is the gnutls patch
+	quilt push
+	tar -cf - --exclude=debian/build* --exclude=.pc . \
+	    | tar -xf - -C debian/build-gnutls
+	# execute dh_auto_configure on both build flavours
+	cd debian/build-openssl && autoreconf -i && dh_auto_configure
+	cd debian/build-gnutls && autoreconf -i && dh_auto_configure -- --without-openssl
+
+override_dh_auto_build:
+	# execute dh_auto_build on both build flavours
+	cd debian/build-openssl && dh_auto_build
+	cd debian/build-gnutls && dh_auto_build
+
+override_dh_auto_test:
+	# execute dh_auto_test on both build flavours
+	cd debian/build-openssl && dh_auto_test
+	cd debian/build-gnutls && dh_auto_test
+
+override_dh_auto_install:
+	echo dh_auto_install

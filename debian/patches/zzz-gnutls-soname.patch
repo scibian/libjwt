@@ -1,0 +1,84 @@
+Description: rename soname to libjwt-gnutls
+Author: Nicolas Mora
+===================================================================
+Index: libjwt-1.10.1/libjwt/Makefile.am
+===================================================================
+--- libjwt-1.10.1.orig/libjwt/Makefile.am	2019-01-14 19:47:12.490180116 +0100
++++ libjwt-1.10.1/libjwt/Makefile.am	2019-01-14 19:47:12.478180116 +0100
+@@ -1,18 +1,18 @@
+-lib_LTLIBRARIES = libjwt.la
++lib_LTLIBRARIES = libjwt-gnutls.la
+ 
+-libjwt_la_SOURCES = jwt.c
++libjwt_gnutls_la_SOURCES = jwt.c
+ 
+ if HAVE_OPENSSL
+-libjwt_la_SOURCES += jwt-openssl.c
++libjwt_gnutls_la_SOURCES += jwt-openssl.c
+ else
+-libjwt_la_SOURCES += jwt-gnutls.c
++libjwt_gnutls_la_SOURCES += jwt-gnutls.c
+ endif
+ 
+ # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+-libjwt_la_LDFLAGS = -version-info 5:1:5 $(OPENSSL_LDFLAGS) $(GNUTLS_LDFLAGS) $(JANSSON_LDFLAGS)
+-libjwt_la_CPPFLAGS = -I$(top_srcdir)/include $(OPENSSL_INCLUDES) $(GNUTLS_INCLUDES) $(CODE_COVERAGE_CPPFLAGS) -Wall
+-libjwt_la_CFLAGS = $(B64_CFLAGS) $(JANSSON_CFLAGS) $(OPENSSL_CFLAGS) $(GNUTLS_CFLAGS) $(CODE_COVERAGE_CFLAGS)
+-libjwt_la_LIBADD = $(B64_LIBS) $(JANSSON_LIBS) $(OPENSSL_LIBS) $(GNUTLS_LIBS) $(CODE_COVERAGE_LDFLAGS)
++libjwt_gnutls_la_LDFLAGS = -version-info 5:1:5 $(OPENSSL_LDFLAGS) $(GNUTLS_LDFLAGS) $(JANSSON_LDFLAGS)
++libjwt_gnutls_la_CPPFLAGS = -I$(top_srcdir)/include $(OPENSSL_INCLUDES) $(GNUTLS_INCLUDES) $(CODE_COVERAGE_CPPFLAGS) -Wall
++libjwt_gnutls_la_CFLAGS = $(B64_CFLAGS) $(JANSSON_CFLAGS) $(OPENSSL_CFLAGS) $(GNUTLS_CFLAGS) $(CODE_COVERAGE_CFLAGS)
++libjwt_gnutls_la_LIBADD = $(B64_LIBS) $(JANSSON_LIBS) $(OPENSSL_LIBS) $(GNUTLS_LIBS) $(CODE_COVERAGE_LDFLAGS)
+ 
+ pkgconfiglibdir = $(libdir)/pkgconfig
+-pkgconfiglib_DATA = libjwt.pc
++pkgconfiglib_DATA = libjwt-gnutls.pc
+Index: libjwt-1.10.1/tests/Makefile.am
+===================================================================
+--- libjwt-1.10.1.orig/tests/Makefile.am	2019-01-14 19:47:12.490180116 +0100
++++ libjwt-1.10.1/tests/Makefile.am	2019-01-14 19:47:12.478180116 +0100
+@@ -12,7 +12,7 @@
+ AM_CPPFLAGS = -I$(top_srcdir)/include
+ AM_CFLAGS = -Wall $(CHECK_CFLAGS) -DKEYDIR="\"$(srcdir)/keys\"" -D_GNU_SOURCE
+ AM_LDFLAGS = -L$(top_builddir)/libjwt
+-LDADD = -ljwt $(CHECK_LIBS)
++LDADD = -ljwt-gnutls -lb64 $(CHECK_LIBS)
+ 
+ @CODE_COVERAGE_RULES@
+ @VALGRIND_CHECK_RULES@
+Index: libjwt-1.10.1/configure.ac
+===================================================================
+--- libjwt-1.10.1.orig/configure.ac	2019-01-14 19:47:12.490180116 +0100
++++ libjwt-1.10.1/configure.ac	2019-01-14 19:53:09.594169411 +0100
+@@ -1,5 +1,5 @@
+ AC_PREREQ([2.61])
+-AC_INIT([libjwt], [1.10.2], [https://github.com/benmcollins/libjwt/issues])
++AC_INIT([libjwt-gnutls], [1.10.2], [https://github.com/benmcollins/libjwt/issues])
+ AM_INIT_AUTOMAKE
+ LT_PREREQ([2.2])
+ LT_INIT([])
+@@ -50,6 +50,7 @@
+ 	libjwt/Makefile
+ 	tests/Makefile
+ 	libjwt/libjwt.pc
++	libjwt/libjwt-gnutls.pc
+ ])
+ 
+ AC_OUTPUT
+Index: libjwt-1.10.1/libjwt/libjwt-gnutls.pc.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ libjwt-1.10.1/libjwt/libjwt-gnutls.pc.in	2019-01-14 19:47:12.478180116 +0100
+@@ -0,0 +1,12 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: @PACKAGE_NAME@
++Description: JWT C Library
++Version: @PACKAGE_VERSION@
++
++Cflags: -I${includedir}
++Libs: -L${libdir} -ljwt-gnutls
++Libs.private: @JANSSON_LIBS@ @OPENSSL_LIBS@ @B64_LIBS@

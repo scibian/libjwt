@@ -1,0 +1,4 @@
+#! /usr/bin/dh-exec
+debian/build-gnutls/libjwt/.libs/libjwt*.so usr/lib/${DEB_HOST_MULTIARCH}/
+debian/build-gnutls/include/jwt.h usr/include
+debian/build-gnutls/libjwt/libjwt-gnutls.pc usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig

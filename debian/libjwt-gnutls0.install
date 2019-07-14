@@ -1,0 +1,2 @@
+#! /usr/bin/dh-exec
+debian/build-gnutls/libjwt/.libs/libjwt*.so.* usr/lib/${DEB_HOST_MULTIARCH}/

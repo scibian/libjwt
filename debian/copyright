@@ -1,0 +1,154 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: hoel
+Source: https://github.com/benmcollins/libjwt
+Files-Excluded:
+  libjwt/base64.*
+
+Files: *
+Copyright: 2015-2017 Ben Collins <ben@cyphre.com>
+License: MPL-2.0
+
+Files: libjwt/jwt-gnutls.c
+Copyright: 2017 Nicolas Mora <mail@babelouest.org>
+License: MPL-2.0
+
+Files: tests/*
+Copyright: 2017 nobody
+License: public-domain
+
+Files: m4/ax_code_coverage.m4
+Copyright: 2012, 2016 Philip Withnall
+	   2012 Xan Lopez
+	   2012 Christian Persch
+	   2012 Paolo Borelli
+	   2012 Dan Winship
+	   2015 Bastien ROUCARIES
+License: LGPL-2.1+
+
+Files: m4/ax_valgrind_check.m4
+Copyright:  2014, 2015, 2016 Philip Withnall <philip.withnall@collabora.co.uk>
+License: permissive
+
+Files: doxygen.mk m4/doxygen.m4
+Copyright: 2004 Oren Ben-Kiki
+License: GPL-3+ with Autoconf exception
+
+Files: debian/*
+Copyright: 2017 Thorsten Alteholz <debian@alteholz.de>
+License: LGPL-3+
+
+License: MPL-2.0
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ .
+ On Debian systems you can find the license in:
+ /usr/share/common-licenses/MPL-2.0
+
+License: LGPL-3+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with the JWT Library; if not, see
+ <http://www.gnu.org/licenses/>.
+
+License: public-domain
+ Public domain, no copyright. Use at your own risk.
+
+License: GPL-3+ with Autoconf exception
+ This file is part of Autoconf.  This program is free
+ software; you can redistribute it and/or modify it under the
+ terms of the GNU General Public License as published by the
+ Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ Under Section 7 of GPL version 3, you are granted additional
+ permissions described in the Autoconf Configure Script Exception,
+ version 3.0, as published by the Free Software Foundation.
+ .
+ You should have received a copy of the GNU General Public License
+ and a copy of the Autoconf Configure Script Exception along with
+ this program; see the files COPYINGv3 and COPYING.EXCEPTION
+ respectively.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ The GNU General Public License version 3 may be found on Debian systems
+ in /usr/share/common-licenses/GPL-3.
+ .
+ The Autoconf Configure Script Exception version 3 is below:
+ .
+		    AUTOCONF CONFIGURE SCRIPT EXCEPTION
+			Version 3.0, 18 August 2009
+ .
+  Copyright (C) 2009 Free Software Foundation, Inc. <http://fsf.org/>
+  Everyone is permitted to copy and distribute verbatim copies
+  of this license document, but changing it is not allowed.
+ .
+ This Exception is an additional permission under section 7 of the GNU
+ General Public License, version 3 ("GPLv3").  It applies to a given
+ file that bears a notice placed by the copyright holder of the file
+ stating that the file is governed by GPLv3 along with this Exception.
+ .
+ The purpose of this Exception is to allow distribution of Autoconf's
+ typical output under terms of the recipient's choice (including
+ proprietary).
+ .
+ 0. Definitions
+ .
+ "Covered Code" is the source or object code of a version of Autoconf
+ that is a covered work under this License.
+ .
+ "Normally Copied Code" for a version of Autoconf means all parts of
+ its Covered Code which that version can copy from its code (i.e., not
+ from its input file) into its minimally verbose, non-debugging and
+ non-tracing output.
+ .
+ "Ineligible Code" is Covered Code that is not Normally Copied Code.
+ .
+ 1. Grant of Additional Permission.
+ .
+ You have permission to propagate output of Autoconf, even if such
+ propagation would otherwise violate the terms of GPLv3.  However, if
+ by modifying Autoconf you cause any Ineligible Code of the version you
+ received to become Normally Copied Code of your modified version, then
+ you void this Exception for the resulting covered work.  If you convey
+ that resulting covered work, you must remove this Exception in accordance
+ with the second paragraph of Section 7 of GPLv3.
+ .
+ 2. No Weakening of Autoconf Copyleft.
+ .
+ The availability of this Exception does not imply any general presumption
+ that third-party software is unaffected by the copyleft requirements of
+ the license of Autoconf.
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or (at
+ your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+License: permissive
+ Copying and distribution of this file, with or without modification, are
+ permitted in any medium without royalty provided the copyright notice
+ and this notice are preserved.  This file is offered as-is, without any
+ warranty.
