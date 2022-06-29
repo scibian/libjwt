@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Debian IoT Maintainers <debian-iot-maintainers@lists.alioth.debian.org>
 Uploaders: Thorsten Alteholz <debian@alteholz.de>
-Build-Depends: debhelper (>= 11)
+Build-Depends: debhelper (>= 10)
 	, pkg-config
 	, libjansson-dev
 	, libssl-dev
