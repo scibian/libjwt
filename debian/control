@@ -1,9 +1,9 @@
 Source: libjwt
 Section: devel
 Priority: optional
-Maintainer: Debian IoT Maintainers <debian-iot-maintainers@lists.alioth.debian.org>
-Uploaders: Thorsten Alteholz <debian@alteholz.de>
-Build-Depends: debhelper (>= 11)
+Maintainer: Scibian Project <packaging@scibian.org>
+Uploaders: Kwame Amedodji <kamedodji@yahoo.fr>,
+Build-Depends: debhelper (>= 10)
 	, pkg-config
 	, libjansson-dev
 	, libssl-dev
