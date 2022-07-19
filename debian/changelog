@@ -1,3 +1,9 @@
+libjwt (1.10.2-1sci10u1) scibian10; urgency=medium
+
+  * Port to scibian
+
+ -- KWAME AMEDODJI <kwame-externe.amedodji@edf.fr>  Wed, 29 Jun 2022 12:06:15 +0200
+
 libjwt (1.10.2-1) unstable; urgency=medium
 
   * New upstream release
